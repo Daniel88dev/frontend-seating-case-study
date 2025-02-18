@@ -21,6 +21,10 @@ type State = {
   event: EventType | null;
 };
 
+type Props = {
+  onEventIdSet: (eventId: string) => void;
+};
+
 const DATE_OPTION: Intl.DateTimeFormatOptions = {
   weekday: "long",
   year: "numeric",
@@ -31,7 +35,7 @@ const DATE_OPTION: Intl.DateTimeFormatOptions = {
   timeZoneName: "short",
 };
 
-const Event = () => {
+const Event = ({ onEventIdSet }: Props) => {
   const [data, setData] = useState<State>({
     loading: true,
     error: null,
@@ -51,6 +55,7 @@ const Event = () => {
             dateTo: new Date(response.dateTo),
           },
         });
+        onEventIdSet(response.eventId);
       })
       .catch((error) => {
         setData({

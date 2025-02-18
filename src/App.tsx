@@ -1,4 +1,3 @@
-import { Seat } from "@/components/Seat.tsx";
 import {
   Avatar,
   AvatarFallback,
@@ -16,9 +15,16 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import "./App.css";
 import Event from "@/components/Event.tsx";
+import { useState } from "react";
+import Seating from "@/components/Seating.tsx";
 
 function App() {
   const isLoggedIn = false;
+  const [eventId, setEventId] = useState<string | null>(null);
+
+  const onEventIdSet = (eventId: string) => {
+    setEventId(eventId);
+  };
 
   return (
     <div className="flex flex-col grow">
@@ -77,21 +83,10 @@ function App() {
         {/* inner content */}
         <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full">
           {/* seating card */}
-          <div
-            className="bg-white rounded-md grow grid p-3 self-stretch shadow-sm"
-            style={{
-              gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))",
-              gridAutoRows: "40px",
-            }}
-          >
-            {/*	seating map */}
-            {Array.from({ length: 100 }, (_, i) => (
-              <Seat key={i} />
-            ))}
-          </div>
+          <Seating eventId={eventId} />
 
           {/* event info */}
-          <Event />
+          <Event onEventIdSet={onEventIdSet} />
         </div>
       </main>
 
