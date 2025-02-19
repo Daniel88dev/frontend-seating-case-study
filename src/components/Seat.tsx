@@ -20,6 +20,7 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
   (props, ref) => {
     const { addToCart, removeFromCart, cart } = useCart();
 
+    //using useMemo
     const isInCart = useMemo(() => {
       return cart.some(
         (item) => item.seatType.seatId === props.seatData.seatType.seatId
@@ -46,8 +47,16 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
         </PopoverTrigger>
         <PopoverContent>
           <h2>Selected Seat:</h2>
-          <p>Row: {props.row}</p>
-          <p>Seat: {props.place}</p>
+          <div className={"flex flex-row gap-4"}>
+            <p>Row: {props.row}</p>
+            <p>Seat: {props.place}</p>
+          </div>
+          <div className={"flex flex-row gap-4"}>
+            <p>Ticket Name: {props.seatData.ticketType.name}</p>
+            <p>
+              Ticket Price: {props.seatData.ticketType.price.toFixed(2)} CZK
+            </p>
+          </div>
           <footer className="flex flex-col">
             {isInCart ? (
               <Button

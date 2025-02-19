@@ -17,7 +17,7 @@ import "./App.css";
 import Event from "@/components/Event.tsx";
 import { useState } from "react";
 import Seating from "@/components/Seating.tsx";
-import CartComponent from "@/components/CartComponent.tsx";
+import Footer from "@/components/ui/Footer.tsx";
 
 function App() {
   const isLoggedIn = false;
@@ -92,19 +92,7 @@ function App() {
       </main>
 
       {/* bottom cart affix (wrapper) */}
-      <nav className="sticky bottom-0 left-0 right-0 bg-white border-t border-zinc-200 flex justify-center">
-        {/* inner content */}
-        <div className="max-w-screen-lg p-6 flex justify-between items-center gap-4 grow">
-          {/* total in cart state */}
-          <div className="flex flex-col">
-            <span>Total for [?] tickets</span>
-            <span className="text-2xl font-semibold">[?] CZK</span>
-          </div>
-
-          {/* checkout button */}
-          <CartComponent />
-        </div>
-      </nav>
+      <Footer />
     </div>
   );
 }

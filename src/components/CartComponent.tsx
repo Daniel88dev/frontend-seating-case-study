@@ -19,6 +19,7 @@ const CartComponent = () => {
   const [open, setOpen] = useState(false);
   const { cart, ticketCount } = useCart();
 
+  //Create array of unique tickets from cart items,including Quantity of each unique item
   const ticketCountArray: TicketCountType[] = Object.values(
     cart.reduce((acc, ticket) => {
       const ticketType = ticket.ticketType;
@@ -34,10 +35,12 @@ const CartComponent = () => {
     }, {} as Record<string, TicketCountType>)
   );
 
+  //calculate total Price of all tickets
   const totalPrice = ticketCountArray.reduce((sum, record) => {
     return sum + record.price * record.count;
   }, 0);
 
+  //using ShadCn Dialog component
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
