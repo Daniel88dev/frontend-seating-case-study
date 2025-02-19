@@ -17,6 +17,7 @@ import "./App.css";
 import Event from "@/components/Event.tsx";
 import { useState } from "react";
 import Seating from "@/components/Seating.tsx";
+import CartComponent from "@/components/CartComponent.tsx";
 
 function App() {
   const isLoggedIn = false;
@@ -101,9 +102,7 @@ function App() {
           </div>
 
           {/* checkout button */}
-          <Button disabled variant="default">
-            Checkout now
-          </Button>
+          <CartComponent />
         </div>
       </nav>
     </div>

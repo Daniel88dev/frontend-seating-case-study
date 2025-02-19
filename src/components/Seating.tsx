@@ -7,7 +7,7 @@ type State = {
   seating: SeatingType | null;
 };
 
-type TicketType = {
+export type TicketType = {
   id: string;
   name: string;
   price: number;
