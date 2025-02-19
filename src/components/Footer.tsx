@@ -1,7 +1,13 @@
 import CartComponent from "@/components/CartComponent.tsx";
 import { useCart } from "@/cart.tsx";
+import { LoginState } from "@/App.tsx";
 
-const Footer = () => {
+type Props = {
+  eventId: string;
+  userData: LoginState;
+};
+
+const Footer = ({ eventId, userData }: Props) => {
   const { cart, ticketCount } = useCart();
 
   //sum of total price
@@ -26,7 +32,7 @@ const Footer = () => {
         )}
 
         {/* checkout button */}
-        <CartComponent />
+        <CartComponent userData={userData} eventId={eventId} />
       </div>
     </nav>
   );

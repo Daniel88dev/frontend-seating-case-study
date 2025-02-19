@@ -119,7 +119,7 @@ function App() {
       </main>
 
       {/* bottom cart affix (wrapper) */}
-      <Footer />
+      <Footer eventId={eventId!} userData={login} />
     </div>
   );
 }
