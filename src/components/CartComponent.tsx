@@ -66,79 +66,110 @@ const CartComponent = ({ userData, eventId }: Props) => {
     event.preventDefault();
     setIsLoading(true);
 
-    // load values, if user authenticated, otherwise load form data
-    const email = userData.isLoggedIn
-      ? userData.email
-      : event.currentTarget.email.value;
+    try {
+      // load values, if user authenticated, otherwise load form data
+      const email = userData.isLoggedIn
+        ? userData.email
+        : event.currentTarget.email.value;
 
-    const firstName = userData.isLoggedIn
-      ? userData.firstName
-      : event.currentTarget.firstName.value;
+      const firstName = userData.isLoggedIn
+        ? userData.firstName
+        : event.currentTarget.firstName.value;
 
-    const lastName = userData.isLoggedIn
-      ? userData.lastName
-      : event.currentTarget.lastName.value;
+      const lastName = userData.isLoggedIn
+        ? userData.lastName
+        : event.currentTarget.lastName.value;
 
-    // validating inputs
-    if (!email) {
-      setError("Email is required");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!firstName) {
-      setError("First Name is required");
-      setIsLoading(false);
-      return;
-    }
-
-    if (!lastName) {
-      setError("Last Name is required");
-      setIsLoading(false);
-      return;
-    }
-    //reformat cart data in to required ticket format
-    const tickets = cart.map((record) => {
-      return {
-        ticketTypeId: record.ticketType.id,
-        seatId: record.seatType.seatId,
-      };
-    });
-    //recheck if ticket array is not empty
-    if (tickets.length === 0) {
-      setError("Cart is empty");
-      setIsLoading(false);
-      return;
-    }
-    //api call
-    const response = await fetch(
-      "https://nfctron-frontend-seating-case-study-2024.vercel.app/order",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          eventId,
-          tickets,
-          user: { email, firstName, lastName },
-        }),
-        headers: { "Content-Type": "application/json" },
+      // validating inputs
+      if (!email) {
+        setError("Email is required");
+        setIsLoading(false);
+        return;
       }
-    );
-    //response check, and return toaster notification if error
-    if (!response.ok) {
-      setError("Order failed");
+
+      if (!firstName) {
+        setError("First Name is required");
+        setIsLoading(false);
+        return;
+      }
+
+      if (!lastName) {
+        setError("Last Name is required");
+        setIsLoading(false);
+        return;
+      }
+      //reformat cart data in to required ticket format
+      const tickets = cart.map((record) => {
+        return {
+          ticketTypeId: record.ticketType.id,
+          seatId: record.seatType.seatId,
+        };
+      });
+      //recheck if ticket array is not empty
+      if (tickets.length === 0) {
+        setError("Cart is empty");
+        setIsLoading(false);
+        return;
+      }
+
+      //helper function to handle no response from backend
+      const fetchWithTimeout = (
+        url: string,
+        options: RequestInit,
+        timeout = 15000
+      ): Promise<Response> => {
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            reject(new Error("Request timed out"));
+          }, timeout);
+
+          fetch(url, options)
+            .then((response) => {
+              clearTimeout(timer);
+              resolve(response);
+            })
+            .catch((err) => {
+              clearTimeout(timer);
+              reject(err);
+            });
+        });
+      };
+
+      // API Call
+      const response = await fetchWithTimeout(
+        "https://nfctron-frontend-seating-case-study-2024.vercel.app/order",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            eventId,
+            tickets,
+            user: { email, firstName, lastName },
+          }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      //response check, and return toaster notification if error
+      if (!response.ok) {
+        setError("Order failed. Please try again-");
+        setIsLoading(false);
+        toast.error("Order failed", { style: { color: "red" } });
+        return;
+      }
+
+      const result = await response.json();
+
+      console.log(result);
+      //success notification and closing dialog
+      toast("Order Completed!");
+      setError(null);
+      setOpen(false);
+    } catch (error) {
+      setError((error as Error).message);
+      toast.error((error as Error).message, { style: { color: "red" } });
+    } finally {
       setIsLoading(false);
-      toast.error("Order failed", { style: { color: "red" } });
-      return;
     }
-
-    const result = await response.json();
-
-    console.log(result);
-    //success notification and closing dialog
-    toast("Order Completed!");
-    setIsLoading(false);
-    setError(null);
-    setOpen(false);
   };
 
   //using ShadCn Dialog component
@@ -198,9 +229,9 @@ const CartComponent = ({ userData, eventId }: Props) => {
                 <Label htmlFor={"email"}>Your Email:</Label>
                 <Input id={"email"} name={"email"} type={"email"} />
                 <Label htmlFor={"firstName"}>First Name:</Label>
-                <Input id={"firstName"} name={"firstName"} type={"email"} />
+                <Input id={"firstName"} name={"firstName"} type={"text"} />
                 <Label htmlFor={"lastName"}>Last Name:</Label>
-                <Input id={"lastName"} name={"lastName"} type={"lastName"} />
+                <Input id={"lastName"} name={"lastName"} type={"text"} />
               </CardContent>
             </Card>
           )}

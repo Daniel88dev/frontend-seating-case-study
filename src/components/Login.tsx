@@ -39,45 +39,53 @@ const Login = ({ onLogin }: Props) => {
   const onLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    const email = event.currentTarget.email.value;
-    const password = event.currentTarget.password.value;
-    //validating inputs
-    if (!email) {
-      setError("Email is required");
-      setIsLoading(false);
-      return;
-    }
 
-    if (!password) {
-      setError("Password is required");
-      setIsLoading(false);
-      return;
-    }
-    //api call
-    const response = await fetch(
-      "https://nfctron-frontend-seating-case-study-2024.vercel.app/login",
-      {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: { "Content-Type": "application/json" },
+    try {
+      const email = event.currentTarget.email.value;
+      const password = event.currentTarget.password.value;
+      //validating inputs
+      if (!email) {
+        setError("Email is required");
+        setIsLoading(false);
+        return;
       }
-    );
-    //handling not succesfull login attempt
-    if (!response.ok) {
-      setError("Invalid email or password");
-      toast.error("Invalid email or password", { style: { color: "red" } });
-      setIsLoading(false);
-      return;
-    }
-    //obtaining data from response
-    const { user, message }: ResponseType = await response.json();
 
-    console.log(message);
-    //calling parent function to store recieved login information and closing dialog
-    onLogin(user.email, user.firstName, user.lastName);
-    toast("Login Successful!");
-    setError(null);
-    setOpen(false);
+      if (!password) {
+        setError("Password is required");
+        setIsLoading(false);
+        return;
+      }
+      //api call
+      const response = await fetch(
+        "https://nfctron-frontend-seating-case-study-2024.vercel.app/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      //handling not succesfull login attempt
+      if (!response.ok) {
+        setError("Invalid email or password");
+        toast.error("Invalid email or password", { style: { color: "red" } });
+        setIsLoading(false);
+        return;
+      }
+      //obtaining data from response
+      const { user, message }: ResponseType = await response.json();
+
+      console.log(message);
+      //calling parent function to store recieved login information and closing dialog
+      onLogin(user.email, user.firstName, user.lastName);
+      toast("Login Successful!");
+      setError(null);
+      setOpen(false);
+    } catch (error) {
+      setError((error as Error).message);
+      toast.error((error as Error).message, { style: { color: "red" } });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
