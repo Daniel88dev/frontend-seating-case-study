@@ -20,7 +20,7 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
   (props, ref) => {
     const { addToCart, removeFromCart, cart } = useCart();
 
-    //using useMemo
+    //using useMemo to force updating cart state for each seat
     const isInCart = useMemo(() => {
       return cart.some(
         (item) => item.seatType.seatId === props.seatData.seatType.seatId

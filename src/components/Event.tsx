@@ -41,7 +41,7 @@ const Event = ({ onEventIdSet }: Props) => {
     error: null,
     event: null,
   });
-
+  //api call to recieve event data
   useEffect(() => {
     fetch("https://nfctron-frontend-seating-case-study-2024.vercel.app/event")
       .then<EventType>((response) => response.json())
@@ -75,7 +75,7 @@ const Event = ({ onEventIdSet }: Props) => {
   }
 
   return (
-    <aside className="w-full max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
+    <div className="w-full max-w-sm bg-white rounded-md shadow-sm p-3 flex flex-col gap-2">
       {/* event header image placeholder */}
       <Avatar>
         <AvatarImage
@@ -108,7 +108,7 @@ const Event = ({ onEventIdSet }: Props) => {
       <Button variant="secondary" disabled>
         Add to calendar
       </Button>
-    </aside>
+    </div>
   );
 };
 

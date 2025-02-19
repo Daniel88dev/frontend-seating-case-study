@@ -41,8 +41,7 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
     seating: null,
   });
 
-  console.log(data);
-
+  //api call for seat data after recieving eventId from Event api call
   useEffect(() => {
     if (eventId) {
       fetch(
@@ -66,6 +65,7 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
     }
   }, [eventId]);
 
+  //handling loading state to keep correct UI
   if (!eventId && data.loading) {
     return (
       <div
@@ -83,10 +83,11 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
   if (data.error) {
     return <p>Error: {data.error}</p>;
   }
-
+  //handling if seat data missing (to prevent other function run, if no seat data, and state not loading
   if (!data.seating) {
-    return <div>Seating loading...</div>;
+    return <div>Seating empty</div>;
   }
+  //helper functions for seat layout
   const { seatRows, ticketTypes } = data.seating;
   const rowsLength = data.seating?.seatRows.map((row) => row.seats.length);
   const maxRowLength = Math.max(...rowsLength);
@@ -99,13 +100,14 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
         gridAutoRows: "40px",
       }}
     >
-      {/*	seating map */}
+      {/*	seating map - rows */}
       {Array.from({ length: seatRows.length }, (_, rowIndex) => {
         rowIndex += 1;
         return (
           <span key={`row-${rowIndex}`}>
             <span className={"text-black pr-2"}>Row {rowIndex}:</span>
             <span>
+              {/*	seating map - seats in row */}
               {Array.from({ length: maxRowLength }, (_, placeNumber) => {
                 placeNumber += 1;
                 const ticketData = seatRows[rowIndex - 1].seats.find(

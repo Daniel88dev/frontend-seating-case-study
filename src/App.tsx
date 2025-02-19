@@ -109,7 +109,7 @@ function App() {
       {/* main body (wrapper) */}
       <main className="grow flex flex-col justify-center">
         {/* inner content */}
-        <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full">
+        <div className="max-w-screen-lg m-auto p-4 flex items-start grow gap-3 w-full flex-col-reverse sm:flex-row">
           {/* seating card */}
           <Seating eventId={eventId} />
 

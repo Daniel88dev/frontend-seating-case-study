@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { FormEvent, useState } from "react";
 import { Label } from "@/components/ui/label.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { toast } from "sonner";
 
 type Props = {
   onLogin: (email: string, firstName: string, lastName: string) => void;
@@ -34,12 +35,13 @@ const Login = ({ onLogin }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  //form login function
   const onLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     const email = event.currentTarget.email.value;
     const password = event.currentTarget.password.value;
-
+    //validating inputs
     if (!email) {
       setError("Email is required");
       setIsLoading(false);
@@ -51,7 +53,7 @@ const Login = ({ onLogin }: Props) => {
       setIsLoading(false);
       return;
     }
-
+    //api call
     const response = await fetch(
       "https://nfctron-frontend-seating-case-study-2024.vercel.app/login",
       {
@@ -60,18 +62,20 @@ const Login = ({ onLogin }: Props) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-
+    //handling not succesfull login attempt
     if (!response.ok) {
       setError("Invalid email or password");
+      toast.error("Invalid email or password", { style: { color: "red" } });
       setIsLoading(false);
       return;
     }
-
+    //obtaining data from response
     const { user, message }: ResponseType = await response.json();
 
     console.log(message);
-
+    //calling parent function to store recieved login information and closing dialog
     onLogin(user.email, user.firstName, user.lastName);
+    toast("Login Successful!");
     setError(null);
     setOpen(false);
   };

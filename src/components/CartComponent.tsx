@@ -66,6 +66,7 @@ const CartComponent = ({ userData, eventId }: Props) => {
     event.preventDefault();
     setIsLoading(true);
 
+    // load values, if user authenticated, otherwise load form data
     const email = userData.isLoggedIn
       ? userData.email
       : event.currentTarget.email.value;
@@ -78,6 +79,7 @@ const CartComponent = ({ userData, eventId }: Props) => {
       ? userData.lastName
       : event.currentTarget.lastName.value;
 
+    // validating inputs
     if (!email) {
       setError("Email is required");
       setIsLoading(false);
@@ -95,20 +97,20 @@ const CartComponent = ({ userData, eventId }: Props) => {
       setIsLoading(false);
       return;
     }
-
+    //reformat cart data in to required ticket format
     const tickets = cart.map((record) => {
       return {
         ticketTypeId: record.ticketType.id,
         seatId: record.seatType.seatId,
       };
     });
-
+    //recheck if ticket array is not empty
     if (tickets.length === 0) {
       setError("Cart is empty");
       setIsLoading(false);
       return;
     }
-
+    //api call
     const response = await fetch(
       "https://nfctron-frontend-seating-case-study-2024.vercel.app/order",
       {
@@ -121,7 +123,7 @@ const CartComponent = ({ userData, eventId }: Props) => {
         headers: { "Content-Type": "application/json" },
       }
     );
-
+    //response check, and return toaster notification if error
     if (!response.ok) {
       setError("Order failed");
       setIsLoading(false);
@@ -132,7 +134,7 @@ const CartComponent = ({ userData, eventId }: Props) => {
     const result = await response.json();
 
     console.log(result);
-
+    //success notification and closing dialog
     toast("Order Completed!");
     setIsLoading(false);
     setError(null);
