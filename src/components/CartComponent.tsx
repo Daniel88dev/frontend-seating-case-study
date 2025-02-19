@@ -34,6 +34,10 @@ const CartComponent = () => {
     }, {} as Record<string, TicketCountType>)
   );
 
+  const totalPrice = ticketCountArray.reduce((sum, record) => {
+    return sum + record.price * record.count;
+  }, 0);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -45,23 +49,24 @@ const CartComponent = () => {
           Checkout now
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className={"bg-white text-black"}>
         <DialogHeader>
           <DialogTitle>Checkout</DialogTitle>
-          <DialogDescription>Total item: {ticketCount}</DialogDescription>
+          <DialogDescription>Total items: {ticketCount}</DialogDescription>
         </DialogHeader>
         <ul className={"flex flex-col gap-y-4"}>
           {ticketCountArray.map((ticket) => (
             <li key={`ticket-${ticket.id}`} className={"flex flex-col"}>
               <h3>Ticket Name: {ticket.name}</h3>
               <div className={"flex flex-row gap-2"}>
-                <p>Price: {ticket.price}</p>
+                <p>Price: {ticket.price.toFixed(2)} CZK</p>
                 <p>Count: {ticket.count}</p>
               </div>
               <p>Sub-Total: {(ticket.price * ticket.count).toFixed(2)} CZK</p>
             </li>
           ))}
         </ul>
+        <h2>Total Price: {totalPrice.toFixed(2)} CZK</h2>
       </DialogContent>
     </Dialog>
   );
