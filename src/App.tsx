@@ -18,13 +18,37 @@ import Event from "@/components/Event.tsx";
 import { useState } from "react";
 import Seating from "@/components/Seating.tsx";
 import Footer from "@/components/ui/Footer.tsx";
+import Login from "@/components/ui/Login.tsx";
+
+type LoginState = {
+  isLoggedIn: boolean;
+  email: string | null;
+  firstName: string | null;
+  lastName: string | null;
+};
 
 function App() {
-  const isLoggedIn = false;
+  const [login, setLogin] = useState<LoginState>({
+    isLoggedIn: false,
+    email: null,
+    firstName: null,
+    lastName: null,
+  });
+  const isLoggedIn = login.isLoggedIn;
   const [eventId, setEventId] = useState<string | null>(null);
 
   const onEventIdSet = (eventId: string) => {
     setEventId(eventId);
+  };
+
+  //login function
+  const onLogin = (email: string, firstName: string, lastName: string) => {
+    setLogin({
+      isLoggedIn: true,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+    });
   };
 
   return (
@@ -48,7 +72,7 @@ function App() {
                     <div className="flex items-center gap-2">
                       <Avatar>
                         <AvatarImage
-                          src={`https://source.boringavatars.com/marble/120/<user-email>?colors=25106C,7F46DB`}
+                          src={`https://source.boringavatars.com/marble/120/${login.email}?colors=25106C,7F46DB`}
                         />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
@@ -71,9 +95,7 @@ function App() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button disabled variant="secondary">
-                Login or register
-              </Button>
+              <Login onLogin={onLogin} />
             )}
           </div>
         </div>
