@@ -17,10 +17,10 @@ import "./App.css";
 import Event from "@/components/Event.tsx";
 import { useState } from "react";
 import Seating from "@/components/Seating.tsx";
-import Footer from "@/components/ui/Footer.tsx";
-import Login from "@/components/ui/Login.tsx";
+import Footer from "@/components/Footer.tsx";
+import Login from "@/components/Login.tsx";
 
-type LoginState = {
+export type LoginState = {
   isLoggedIn: boolean;
   email: string | null;
   firstName: string | null;
@@ -72,15 +72,20 @@ function App() {
                     <div className="flex items-center gap-2">
                       <Avatar>
                         <AvatarImage
-                          src={`https://source.boringavatars.com/marble/120/${login.email}?colors=25106C,7F46DB`}
+                          src={`https://source.boringavatars.com/marble/120/$<user-email>?colors=25106C,7F46DB`}
                         />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarFallback className={"text-zinc-800"}>
+                          {login.firstName ? login.firstName[0] : "J"}
+                          {login.lastName ? login.lastName[0] : "D"}
+                        </AvatarFallback>
                       </Avatar>
 
                       <div className="flex flex-col text-left">
-                        <span className="text-sm font-medium">John Doe</span>
+                        <span className="text-sm font-medium text-zinc-800">
+                          {login.firstName} {login.lastName}
+                        </span>
                         <span className="text-xs text-zinc-500">
-                          john.doe@nfctron.com
+                          {login.email ? login.email : "john.doe@nfctron.com"}
                         </span>
                       </div>
                     </div>
