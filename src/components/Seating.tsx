@@ -104,7 +104,7 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
         rowIndex += 1;
         return (
           <span key={`row-${rowIndex}`}>
-            <span className={"text-black"}>Row {rowIndex}:</span>
+            <span className={"text-black pr-2"}>Row {rowIndex}:</span>
             <span>
               {Array.from({ length: maxRowLength }, (_, placeNumber) => {
                 placeNumber += 1;
@@ -114,6 +114,7 @@ const Seating = ({ eventId }: { eventId: string | null }) => {
                 return (
                   <Seat
                     available={!!ticketData}
+                    row={rowIndex}
                     seatData={
                       ticketData
                         ? {

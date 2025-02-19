@@ -11,6 +11,7 @@ import { SeatDataType } from "@/components/Seating.tsx";
 interface SeatProps extends React.HTMLAttributes<HTMLElement> {
   place: number;
   available: boolean;
+  row: number;
   seatData: SeatDataType;
 }
 
@@ -37,8 +38,9 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
           </div>
         </PopoverTrigger>
         <PopoverContent>
-          <pre>{JSON.stringify({ seatData: null }, null, 2)}</pre>
-
+          <h2>Selected Seat:</h2>
+          <p>Row: {props.row}</p>
+          <p>Seat: {props.place}</p>
           <footer className="flex flex-col">
             {isInCart ? (
               <Button disabled variant="destructive" size="sm">
