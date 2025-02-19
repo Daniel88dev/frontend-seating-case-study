@@ -5,8 +5,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover.tsx";
 import { cn } from "@/lib/utils.ts";
-import React from "react";
+import React, { useMemo } from "react";
 import { SeatDataType } from "@/components/Seating.tsx";
+import { useCart } from "@/cart.tsx";
 
 interface SeatProps extends React.HTMLAttributes<HTMLElement> {
   place: number;
@@ -17,7 +18,14 @@ interface SeatProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
   (props, ref) => {
-    const isInCart = false;
+    const { addToCart, removeFromCart, cart } = useCart();
+
+    const isInCart = useMemo(() => {
+      return cart.some(
+        (item) => item.seatType.seatId === props.seatData.seatType.seatId
+      );
+    }, [cart, props.seatData.seatType.seatId]);
+
     return (
       <Popover>
         <PopoverTrigger disabled={!props.available}>
@@ -28,8 +36,7 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
               {
                 "bg-zinc-100 text-black hover:bg-zinc-200": props.available,
                 "bg-red-400 text-zinc-200 hover:bg-red-500": !props.available,
-                "bg-white border-green-400 text-zinc-200 hover:text-white hover:bg-zinc-100":
-                  isInCart,
+                "bg-green-400 text-black hover:bg-green-600": isInCart,
               }
             )}
             ref={ref}
@@ -43,11 +50,19 @@ export const Seat = React.forwardRef<HTMLDivElement, SeatProps>(
           <p>Seat: {props.place}</p>
           <footer className="flex flex-col">
             {isInCart ? (
-              <Button disabled variant="destructive" size="sm">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => removeFromCart(props.seatData)}
+              >
                 Remove from cart
               </Button>
             ) : (
-              <Button disabled variant="default" size="sm">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => addToCart(props.seatData)}
+              >
                 Add to cart
               </Button>
             )}

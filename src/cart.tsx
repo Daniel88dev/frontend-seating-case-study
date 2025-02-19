@@ -10,6 +10,7 @@ type CartContextType = {
   cart: SeatDataType[];
   addToCart: (seat: SeatDataType) => void;
   removeFromCart: (seat: SeatDataType) => void;
+  checkInCart: (seatId: string) => boolean;
   ticketCount: number;
 };
 type CartActionTypes =
@@ -53,9 +54,23 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     dispatch({ type: "REMOVE_TICKET", seat });
   };
 
+  const checkInCart = (seatId: string) => {
+    const check = cart.find((record) => {
+      record.seatType.seatId === seatId;
+    });
+
+    return !!check;
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, ticketCount: cart.length }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        checkInCart,
+        ticketCount: cart.length,
+      }}
     >
       {children}
     </CartContext.Provider>
